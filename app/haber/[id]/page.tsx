@@ -1,0 +1,78 @@
+ 
+ import Link from 'next/link';
+ import { supabase } from '@/lib/supabase';
+ import { notFound } from 'next/navigation';
+
+ export const revalidate = 0;
+
+ export default async function HaberDetay({ params }: { params: Promise<{ id: string }> }) {
+   const { id } = await params;
+
+     const { data: item, error } = await supabase
+         .from('haberler')
+             .select('*')
+                 .eq('id', id)
+                     .single();
+
+                       if (error || !item) {
+                           notFound();
+                             }
+
+                               return (
+                                   <main className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+                                         <article className="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+                                                 <Link
+                                                           href="/"
+                                                                     className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 mb-6"
+                                                                             >
+                                                                                       ← Tüm Haberlere Dön
+                                                                                               </Link>
+
+                                                                                                       {item.kategori && (
+                                                                                                                 <div className="mb-3">
+                                                                                                                             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                                                                                                                                           {item.kategori}
+                                                                                                                                                       </span>
+                                                                                                                                                                 </div>
+                                                                                                                                                                         )}
+
+                                                                                                                                                                                 <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+                                                                                                                                                                                           {item.baslik}
+                                                                                                                                                                                                   </h1>
+
+                                                                                                                                                                                                           {item.created_at && (
+                                                                                                                                                                                                                     <div className="text-xs text-gray-400 mb-6 pb-4 border-b border-gray-100">
+                                                                                                                                                                                                                                 Yayınlanma Tarihi: {new Date(item.created_at).toLocaleDateString('tr-TR')}
+                                                                                                                                                                                                                                           </div>
+                                                                                                                                                                                                                                                   )}
+
+                                                                                                                                                                                                                                                           {item.resim_url && (
+                                                                                                                                                                                                                                                                     <img
+                                                                                                                                                                                                                                                                                 src={item.resim_url}
+                                                                                                                                                                                                                                                                                             alt={item.baslik}
+                                                                                                                                                                                                                                                                                                         className="w-full h-64 sm:h-96 object-cover rounded-lg mb-6"
+                                                                                                                                                                                                                                                                                                                   />
+                                                                                                                                                                                                                                                                                                                           )}
+
+                                                                                                                                                                                                                                                                                                                                   <div className="text-gray-700 text-base sm:text-lg leading-relaxed whitespace-pre-line mb-8">
+                                                                                                                                                                                                                                                                                                                                             {item.ozet}
+                                                                                                                                                                                                                                                                                                                                                     </div>
+
+                                                                                                                                                                                                                                                                                                                                                             {item.link && (
+                                                                                                                                                                                                                                                                                                                                                                       <div className="pt-4 border-t border-gray-100">
+                                                                                                                                                                                                                                                                                                                                                                                   <a
+                                                                                                                                                                                                                                                                                                                                                                                                 href={item.link}
+                                                                                                                                                                                                                                                                                                                                                                                                               target="_blank"
+                                                                                                                                                                                                                                                                                                                                                                                                                             rel="noopener noreferrer"
+                                                                                                                                                                                                                                                                                                                                                                                                                                           className="inline-flex items-center text-sm font-medium text-blue-600 hover:underline"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       >
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     Haberin Kaynağına Git ↗
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </a>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   )}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </article>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </main>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
